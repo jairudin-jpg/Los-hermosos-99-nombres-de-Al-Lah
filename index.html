@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Los 99 Nombres de Allah</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a5e63;
+            --secondary-color: #d4af37;
+            --background-light: #f8f5e6;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --primary-color: #2aa8a8;
+            --secondary-color: #d4af37;
+            --background-light: #1a1a2e;
+            --text-dark: #f0f0f0;
+            --text-light: #ffffff;
+            --card-bg: #16213e;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: var(--transition);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #0d4448);
+            color: var(--text-light);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: var(--text-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        #search {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--primary-color);
+            border-radius: 20px;
+            color: var(--primary-color);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .names-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .name-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .name-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .number {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .arabic-name {
+            font-size: 2rem;
+            text-align: right;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            font-family: 'Traditional Arabic', serif;
+        }
+
+        .transliteration {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+
+        .meaning {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            padding-top: 10px;
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--primary-color), #0d4448);
+            color: var(--text-light);
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .names-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .names-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .theme-toggle {
+                top: 0.5rem;
+                right: 0.5rem;
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <h1>Los 99 Nombres de Allah</h1>
+            <p class="subtitle">Conoce los bellos nombres y atributos de Allah</p>
+            <div class="search-container">
+                <input type="text" id="search" placeholder="Buscar por nombre o significado...">
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="mercy">Misericordia</button>
+            <button class="filter-btn" data-filter="power">Poder</button>
+            <button class="filter-btn" data-filter="knowledge">Sabiduría</button>
+        </div>
+
+        <div class="names-grid" id="namesContainer">
+            <!-- Los nombres se cargarán aquí con JavaScript -->
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>© 2023 Los 99 Nombres de Allah - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script>
+        // Datos de ejemplo para los nombres de Allah
+        const namesData = [
+            {
+                number: 1,
+                arabic: "الرَّحْمَنُ",
+                transliteration: "Ar-Rahman",
+                meaning: "El Misericordiosísimo",
+                description: "Aquel que tiene misericordia para todos los creyentes y no creyentes en este mundo y especialmente para los creyentes en el otro mundo.",
+                category: "mercy"
+            },
+            {
+                number: 2,
+                arabic: "الرَّحِيمُ",
+                transliteration: "Ar-Rahim",
+                meaning: "El Compasivo",
+                description: "Aquel que actúa con extrema bondad, benevolencia y misericordia en todos los asuntos.",
+                category: "mercy"
+            },
+            {
+                number: 3,
+                arabic: "الْمَلِكُ",
+                transliteration: "Al-Malik",
+                meaning: "El Rey",
+                description: "Aquel que es el soberano dueño y gobernante de todo el universo.",
+                category: "power"
+            },
+            {
+                number: 4,
+                arabic: "الْقُدُّوسُ",
+                transliteration: "Al-Quddus",
+                meaning: "El Santísimo",
+                description: "Aquel que está libre de cualquier imperfección, deficiencia o impureza.",
+                category: "knowledge"
+            },
+            {
+                number: 5,
+                arabic: "السَّلاَمُ",
+                transliteration: "As-Salam",
+                meaning: "La Fuente de Paz",
+                description: "Aquel que es la fuente de toda paz, seguridad y perfección.",
+                category: "mercy"
+            },
+            // Se pueden agregar los 94 nombres restantes aquí
+        ];
+
+        // Elementos DOM
+        const namesContainer = document.getElementById('namesContainer');
+        const searchInput = document.getElementById('search');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const themeToggle = document.getElementById('themeToggle');
+
+        // Cargar nombres en el grid
+        function loadNames(filter = 'all', searchTerm = '') {
+            namesContainer.innerHTML = '';
+            
+            const filteredNames = namesData.filter(name => {
+                const matchesFilter = filter === 'all' || name.category === filter;
+                const matchesSearch = searchTerm === '' || 
+                    name.transliteration.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    name.meaning.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    name.description.toLowerCase().includes(searchTerm.toLowerCase());
+                
+                return matchesFilter && matchesSearch;
+            });
+            
+            if (filteredNames.length === 0) {
+                namesContainer.innerHTML = '<p class="no-results">No se encontraron nombres que coincidan con tu búsqueda.</p>';
+                return;
+            }
+            
+            filteredNames.forEach(name => {
+                const nameCard = document.createElement('div');
+                nameCard.classList.add('name-card');
+                nameCard.innerHTML = `
+                    <div class="number">${name.number}</div>
+                    <div class="arabic-name">${name.arabic}</div>
+                    <div class="transliteration">${name.transliteration}</div>
+                    <div class="meaning">${name.meaning}</div>
+                    <div class="description">${name.description}</div>
+                `;
+                namesContainer.appendChild(nameCard);
+            });
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', (e) => {
+            const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+            loadNames(activeFilter, e.target.value);
+        });
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                const filter = button.dataset.filter;
+                loadNames(filter, searchInput.value);
+            });
+        });
+
+        // Modo oscuro/claro
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        });
+
+        // Inicializar
+        loadNames();
+    </script>
+</body>
+</html>
