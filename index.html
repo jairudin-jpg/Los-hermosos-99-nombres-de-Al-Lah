@@ -228,10 +228,16 @@
             font-weight: 500;
             text-decoration: none;
             transition: var(--transition);
+            background: var(--primary-light);
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
         }
         
         .read-more:hover {
             color: var(--primary-dark);
+            background: #a3d5d1;
+            transform: translateY(-2px);
         }
         
         .read-more i {
@@ -271,6 +277,139 @@
             opacity: 0.9;
         }
         
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            display: block;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: modalFadeIn 0.4s ease;
+            overflow: hidden;
+        }
+        
+        @keyframes modalFadeIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            background: var(--gradient);
+            color: var(--white);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .modal-close:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+        }
+        
+        .modal-arabic {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            font-family: 'Traditional Arabic', 'Scheherazade New', serif;
+        }
+        
+        .modal-transliteration {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .modal-meaning {
+            font-size: 1.3rem;
+            opacity: 0.95;
+        }
+        
+        .modal-body {
+            padding: 30px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .modal-section {
+            margin-bottom: 25px;
+        }
+        
+        .modal-section-title {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 10px;
+        }
+        
+        .modal-section-title i {
+            margin-right: 10px;
+        }
+        
+        .modal-section-content {
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+        
+        .modal-section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .modal-reference {
+            background-color: var(--primary-light);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-style: italic;
+        }
+        
+        .empty-content {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-light);
+        }
+        
+        .empty-content i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary-light);
+        }
+        
         @media (max-width: 768px) {
             .names-grid {
                 grid-template-columns: 1fr;
@@ -286,6 +425,15 @@
             
             header {
                 padding: 30px 15px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+            
+            .modal-arabic {
+                font-size: 2.8rem;
             }
         }
         
@@ -313,7 +461,7 @@
             text-decoration: none;
             box-shadow: var(--shadow);
             transition: var(--transition);
-            z-index: 1000;
+            z-index: 900;
             opacity: 0;
             pointer-events: none;
         }
@@ -354,114 +502,178 @@
         </footer>
     </div>
 
+    <!-- Modal para detalles -->
+    <div id="nameModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-close" id="modalClose">&times;</span>
+                <div class="modal-arabic" id="modalArabic"></div>
+                <div class="modal-transliteration" id="modalTransliteration"></div>
+                <div class="modal-meaning" id="modalMeaning"></div>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- El contenido detallado se insertará aquí -->
+            </div>
+        </div>
+    </div>
+
     <a href="#" class="back-to-top">
         <i class="fas fa-arrow-up"></i>
     </a>
 
     <script>
-        // Todos los nombres de Allah
+        // Todos los nombres de Allah (sin información detallada)
         const nombresDeAllah = [
-            { nombre: "الله", transliteracion: "Allah", significado: "Dios", descripcion: "El Nombre supremo que abarca todos los atributos divinos. Representa la esencia misma de la divinidad, la fuente de toda existencia y el único merecedor de adoración." },
-            { nombre: "الرحمن", transliteracion: "Ar-Rahman", significado: "El Misericordioso", descripcion: "Cuyo amor y misericordia abarcan todas las cosas en el universo. Su compasión se extiende a toda la creación, creyentes y no creyentes por igual, en esta vida y en la otra." },
-            { nombre: "الرحيم", transliteracion: "Ar-Rahim", significado: "El Compasivo", descripcion: "El que concede misericordia especial a los creyentes. Su misericordia se manifiesta en la guía hacia la fe y la concesión de bendiciones espirituales y eternas." },
-            { nombre: "الملك", transliteracion: "Al-Malik", significado: "El Rey", descripcion: "Soberano absoluto sobre toda la creación. Posee el dominio completo de los cielos y la tierra, y todo lo que existe está bajo Su control y autoridad." },
-            { nombre: "القدوس", transliteracion: "Al-Quddus", significado: "El Santísimo", descripcion: "Libre de toda imperfección, deficiencia o limitación. Es la fuente de toda pureza y santidad, alejado de todo lo que no sea digno de Su perfección." },
-            { nombre: "السلام", transliteracion: "As-Salam", significado: "La Paz", descripcion: "Fuente de paz y seguridad para sus siervos. De Él emana toda paz y hacia Él regresa toda paz. Quien se acerca a Él encuentra la paz verdadera." },
-            { nombre: "المؤمن", transliteracion: "Al-Mu'min", significado: "El que da seguridad", descripcion: "Protector y dador de fe a sus siervos. Quien confía en Él encuentra seguridad y protección contra todo mal y daño." },
-            { nombre: "المهيمن", transliteracion: "Al-Muhaymin", significado: "El Guardián", descripcion: "El que vela sobre Su creación. Testigo de todas las cosas, protector y preservador de todo lo que existe." },
-            { nombre: "العزيز", transliteracion: "Al-Aziz", significado: "El Poderoso", descripcion: "El que tiene fuerza y autoridad absoluta. El Victorioso que no puede ser derrotado, cuya voluntad siempre se cumple." },
-            { nombre: "الجبار", transliteracion: "Al-Jabbar", significado: "El Dominador", descripcion: "El que endereza lo torcido y corrige con firmeza. Repara las cosas rotas y restaura el equilibrio en la creación." },
-            { nombre: "المتكبر", transliteracion: "Al-Mutakabbir", significado: "El Majestuoso", descripcion: "El que es grande y está por encima de toda imperfección. Posee toda grandeza y majestad, y se manifiesta en Su creación con perfección." },
-            { nombre: "الخالق", transliteracion: "Al-Khaliq", significado: "El Creador", descripcion: "Aquel que da origen a todo lo existente. Crea sin necesidad de modelo previo y determina la naturaleza de todas las cosas." },
-            { nombre: "البارئ", transliteracion: "Al-Bari'", significado: "El Originador", descripcion: "El que da existencia a partir de la nada. Da forma a la creación con perfección y armonía, sin defecto alguno." },
-            { nombre: "المصور", transliteracion: "Al-Musawwir", significado: "El Formador", descripcion: "Aquel que da forma y perfección a Su creación. Diseña cada ser con características únicas y específicas." },
-            { nombre: "الغفار", transliteracion: "Al-Ghaffar", significado: "El Perdonador", descripcion: "El que perdona los pecados con abundancia. Cubre las faltas de Sus siervos y les concede el perdón una y otra vez." },
-            { nombre: "القهار", transliteracion: "Al-Qahhar", significado: "El Dominador Supremo", descripcion: "El que somete todo bajo Su poder. Todo en el universo está sujeto a Su voluntad y dominio absoluto." },
-            { nombre: "الوهاب", transliteracion: "Al-Wahhab", significado: "El Donador", descripcion: "El que concede dones sin esperar nada a cambio. Su generosidad no tiene límites y otorga favores continuamente." },
-            { nombre: "الرزاق", transliteracion: "Ar-Razzaq", significado: "El Sustentador", descripcion: "Quien provee el sustento a toda la creación. Provee a cada ser según sus necesidades y con perfecta sabiduría." },
-            { nombre: "الفتاح", transliteracion: "Al-Fattah", significado: "El Que Abre", descripcion: "El que abre los caminos y las puertas de la victoria. Remueve obstáculos y concede soluciones a los problemas." },
-            { nombre: "العليم", transliteracion: "Al-Alim", significado: "El Omnisciente", descripcion: "El que lo sabe todo, lo oculto y lo manifiesto. Su conocimiento abarca el pasado, presente y futuro, sin limitación alguna." },
-            { nombre: "القابض", transliteracion: "Al-Qabid", significado: "El que Retiene", descripcion: "El que restringe y retiene según Su sabiduría. Contrae el sustento o las bendiciones como prueba o lección para Sus siervos." },
-            { nombre: "الباسط", transliteracion: "Al-Basit", significado: "El que Expande", descripcion: "El que otorga amplitud y bendición. Expande el sustento, el conocimiento y la misericordia a quien Él quiere." },
-            { nombre: "الخافض", transliteracion: "Al-Khafid", significado: "El que Abate", descripcion: "El que humilla a quien quiere. Disminuye el estatus de quienes se ensoberbecen o desobedecen Sus mandatos." },
-            { nombre: "الرافع", transliteracion: "Ar-Rafi'", significado: "El que Eleva", descripcion: "El que exalta a quien quiere. Eleva en rango y honor a los creyentes piadosos y obedientes." },
-            { nombre: "المعز", transliteracion: "Al-Mu'izz", significado: "El que Honra", descripcion: "El que concede dignidad y honra. Fortalece y da poder a quienes se someten a Su voluntad." },
-            { nombre: "المذل", transliteracion: "Al-Mudhill", significado: "El que Humilla", descripcion: "El que somete y humilla a los arrogantes. Debilita y deshonra a quienes se rebelan contra Él." },
-            { nombre: "السميع", transliteracion: "As-Sami'", significado: "El Oyente", descripcion: "El que escucha todo sin límites. Percibe todos los sonidos, palabras y susurros, sin importar cuán bajos sean." },
-            { nombre: "البصير", transliteracion: "Al-Basir", significado: "El que Todo lo Ve", descripcion: "El que ve todo, lo oculto y lo visible. Su vista abarca todo lo existente, sin impedimento alguno." },
-            { nombre: "الحكم", transliteracion: "Al-Hakam", significado: "El Juez", descripcion: "El que juzga con justicia absoluta. Su juicio es perfecto e imparcial, y establece lo que es correcto y verdadero." },
-            { nombre: "العدل", transliteracion: "Al-Adl", significado: "El Justo", descripcion: "El que establece justicia perfecta. Su equidad es absoluta y trata a todos con perfecta imparcialidad." },
-            { nombre: "اللطيف", transliteracion: "Al-Latif", significado: "El Sutil", descripcion: "El que conoce los detalles más ocultos y actúa con suavidad. Su bondad llega a Sus siervos de maneras sutiles e inesperadas." },
-            { nombre: "الخبير", transliteracion: "Al-Khabir", significado: "El Conocedor Íntimo", descripcion: "El que conoce lo más oculto en el corazón. Está consciente de la realidad interior de todas las cosas." },
-            { nombre: "الحليم", transliteracion: "Al-Halim", significado: "El Indulgente", descripcion: "El que no se apresura en castigar. Tolera las faltas de Sus siervos y les concede tiempo para arrepentirse." },
-            { nombre: "العظيم", transliteracion: "Al-Azim", significado: "El Magnífico", descripcion: "El de grandeza infinita. Su majestad y gloria no tienen límites ni comparación." },
-            { nombre: "الغفور", transliteracion: "Al-Ghafur", significado: "El Perdonador", descripcion: "El que perdona abundantemente. Su capacidad de perdón supera cualquier falta o pecado." },
-            { nombre: "الشكور", transliteracion: "Ash-Shakur", significado: "El Agradecido", descripcion: "El que recompensa incluso los actos pequeños. Aprecia las buenas acciones y las multiplica en recompensa." },
-            { nombre: "العلي", transliteracion: "Al-Ali", significado: "El Altísimo", descripcion: "El más elevado en rango y esencia. Su posición está por encima de toda la creación, sin igual ni semejanza." },
-            { nombre: "الكبير", transliteracion: "Al-Kabir", significado: "El Grande", descripcion: "El de grandeza sin igual. Su grandeza es absoluta en esencia, poder y majestad." },
-            { nombre: "الحفيظ", transliteracion: "Al-Hafiz", significado: "El Guardián", descripcion: "El que protege y preserva todo. Mantiene la existencia de todas las cosas y preserva el orden establecido." },
-            { nombre: "المقيت", transliteracion: "Al-Muqit", significado: "El Sustentador", descripcion: "El que alimenta y mantiene la existencia. Provee no solo alimento físico, sino también espiritual." },
-            { nombre: "الحسيب", transliteracion: "Al-Hasib", significado: "El que Suficienta", descripcion: "El que basta para todos. Es suficiente para Sus siervos en todas sus necesidades y asuntos." },
-            { nombre: "الجليل", transliteracion: "Al-Jalil", significado: "El Majestuoso", descripcion: "El que posee majestuosidad y honor. Su majestad se refleja en la grandeza de Su creación." },
-            { nombre: "الكريم", transliteracion: "Al-Karim", significado: "El Generoso", descripcion: "El que otorga sin límite. Su generosidad es ilimitada y no disminuye por mucho que otorgue." },
-            { nombre: "الرقيب", transliteracion: "Ar-Raqib", significado: "El Vigilante", descripcion: "El que observa y supervisa todo. Nada escapa a Su observación y cuidado." },
-            { nombre: "المجيب", transliteracion: "Al-Mujib", significado: "El que Responde", descripcion: "El que responde a las súplicas. Atiende los ruegos de Sus siervos según Su sabiduría y misericordia." },
-            { nombre: "الواسع", transliteracion: "Al-Wasi'", significado: "El Inmenso", descripcion: "Aquel cuya misericordia lo abarca todo. Su conocimiento, poder y riqueza son ilimitados." },
-            { nombre: "الحكيم", transliteracion: "Al-Hakim", significado: "El Sabio", descripcion: "El que actúa con sabiduría perfecta. Coloca cada cosa en su lugar apropiado según Su conocimiento perfecto." },
-            { nombre: "الودود", transliteracion: "Al-Wadud", significado: "El Amoroso", descripcion: "El que ama a Sus siervos. Su amor se manifiesta en las bendiciones y cuidados que prodiga." },
-            { nombre: "المجيد", transliteracion: "Al-Majid", significado: "El Glorioso", descripcion: "El que posee gloria y nobleza infinitas. Su gloria se manifiesta en la perfección de Sus atributos." },
-            { nombre: "الباعث", transliteracion: "Al-Ba'ith", significado: "El que Resucita", descripcion: "El que da vida después de la muerte. Resucitará a toda la creación para el Día del Juicio." },
-            { nombre: "الشهيد", transliteracion: "Ash-Shahid", significado: "El Testigo", descripcion: "El que observa y da testimonio de todo. Está presente en todo lugar y tiempo, atestiguando todas las cosas." },
-            { nombre: "الحق", transliteracion: "Al-Haqq", significado: "La Verdad", descripcion: "El que es absolutamente verdadero y justo. Su esencia es la verdad misma y Sus promesas son siempre ciertas." },
-            { nombre: "الوكيل", transliteracion: "Al-Wakil", significado: "El Protector", descripcion: "El que se encarga de los asuntos de Sus siervos. Quien confía en Él encuentra que es suficiente para todos sus asuntos." },
-            { nombre: "القوي", transliteracion: "Al-Qawiyy", significado: "El Fuerte", descripcion: "El que posee fuerza ilimitada. Su poder es perfecto y no conoce debilidad alguna." },
-            { nombre: "المتين", transliteracion: "Al-Matin", significado: "El Firme", descripcion: "El inquebrantable y sólido. Su fuerza es constante y no disminuye con el tiempo." },
-            { nombre: "الولي", transliteracion: "Al-Wali", significado: "El Protector Cercano", descripcion: "El que cuida y apoya a los creyentes. Es el amigo y protector de quienes creen en Él." },
-            { nombre: "الحميد", transliteracion: "Al-Hamid", significado: "El Digno de Alabanza", descripcion: "El que merece toda gratitud y elogio. Todas las alabanzas pertenecen a Él por derecho." },
-            { nombre: "المحصي", transliteracion: "Al-Muhsi", significado: "El Calculador", descripcion: "El que enumera y conoce todas las cosas. Tiene cuenta exacta de todo lo que existe y sucede." },
-            { nombre: "المبدئ", transliteracion: "Al-Mubdi'", significado: "El Originador", descripcion: "El que inicia la creación. Da comienzo a todas las cosas sin modelo previo." },
-            { nombre: "المعيد", transliteracion: "Al-Mu'id", significado: "El que Repite la Creación", descripcion: "El que devuelve la vida después de la muerte. Restaura la existencia como lo hizo la primera vez." },
-            { nombre: "المحيي", transliteracion: "Al-Muhyi", significado: "El que Da Vida", descripcion: "El que otorga la vida a lo inanimado. Infunde el espíritu y la vida en los seres creados." },
-            { nombre: "المميت", transliteracion: "Al-Mumit", significado: "El que Da Muerte", descripcion: "El que causa la muerte a Sus criaturas. Toma las almas cuando llega su tiempo decretado." },
-            { nombre: "الحي", transliteracion: "Al-Hayy", significado: "El Viviente", descripcion: "El que vive eternamente sin fin. Su vida es perfecta y no depende de nada ni de nadie." },
-            { nombre: "القيوم", transliteracion: "Al-Qayyum", significado: "El Autosuficiente", descripcion: "El que sostiene todo sin necesitar de nada. Mantiene la existencia de todos los seres." },
-            { nombre: "الواجد", transliteracion: "Al-Wajid", significado: "El que Todo lo Encuentra", descripcion: "Nada se le escapa, lo tiene todo. Encuentra todo lo que desea y necesita." },
-            { nombre: "الماجد", transliteracion: "Al-Majid", significado: "El Glorioso", descripcion: "El que posee nobleza y honor. Su gloria y generosidad son infinitas." },
-            { nombre: "الواحد", transliteracion: "Al-Wahid", significado: "El Único", descripcion: "El que no tiene igual. Es único en Su esencia, atributos y acciones." },
-            { nombre: "الاحد", transliteracion: "Al-Ahad", significado: "El Uno", descripcion: "El absolutamente único y sin socio. No tiene partes, ni iguales, ni opuestos." },
-            { nombre: "الصمد", transliteracion: "As-Samad", significado: "El Eterno", descripcion: "El autosuficiente al que todos recurren. Todos necesitan de Él, mientras que Él no necesita de nadie." },
-            { nombre: "القادر", transliteracion: "Al-Qadir", significado: "El Poderoso", descripcion: "El que todo lo puede. Su poder abarca todas las cosas sin excepción." },
-            { nombre: "المقتدر", transliteracion: "Al-Muqtadir", significado: "El Todopoderoso", descripcion: "El que domina todas las cosas. Su poder es perfecto y no conoce obstáculos." },
-            { nombre: "المقدم", transliteracion: "Al-Muqaddim", significado: "El que Adelanta", descripcion: "El que da prioridad a quien quiere. Adelanta en tiempo y rango a quien Él decide." },
-            { nombre: "المؤخر", transliteracion: "Al-Mu'akhkhir", significado: "El que Retrasa", descripcion: "El que pospone lo que quiere. Retrasa en tiempo y rango a quien Él decide." },
-            { nombre: "الأول", transliteracion: "Al-Awwal", significado: "El Primero", descripcion: "Aquel que no tiene principio. Existía antes de toda la creación." },
-            { nombre: "الأخر", transliteracion: "Al-Akhir", significado: "El Último", descripcion: "Aquel que no tiene fin. Permanecerá después de la desaparición de la creación." },
-            { nombre: "الظاهر", transliteracion: "Az-Zahir", significado: "El Manifiesto", descripcion: "El que se muestra en sus signos. Su existencia es evidente a través de las pruebas en la creación." },
-            { nombre: "الباطن", transliteracion: "Al-Batin", significado: "El Oculto", descripcion: "El que está oculto pero todo lo abarca. Su esencia está velada a la comprensión humana." },
-            { nombre: "الوالي", transliteracion: "Al-Wali", significado: "El Gobernante", descripcion: "El que gobierna todo. Es el soberano que controla todos los asuntos de la creación." },
-            { nombre: "المتعالي", transliteracion: "Al-Muta'ali", significado: "El Altísimo", descripcion: "El que está por encima de toda imperfección. Su esencia está exenta de cualquier defecto." },
-            { nombre: "البر", transliteracion: "Al-Barr", significado: "El Bondadoso", descripcion: "El que hace el bien a Sus siervos. Su bondad se extiende a toda la creación." },
-            { nombre: "التواب", transliteracion: "At-Tawwab", significado: "El que Acepta el Arrepentimiento", descripcion: "El que perdona a quien se vuelve a Él. Acepta el arrepentimiento de Sus siervos una y otra vez." },
-            { nombre: "المنتقم", transliteracion: "Al-Muntaqim", significado: "El Vengador", descripcion: "El que castiga con justicia a los opresores. Su venganza es perfectamente justa y medida." },
-            { nombre: "العفو", transliteracion: "Al-'Afuww", significado: "El Indulgente", descripcion: "El que borra los pecados. Perdona las faltas y pasa por alto los errores." },
-            { nombre: "الرؤوف", transliteracion: "Ar-Ra'uf", significado: "El Compasivo", descripcion: "El de compasión extrema. Su misericordia y compasión abarcan toda la creación." },
-            { nombre: "مالك الملك", transliteracion: "Malik-ul-Mulk", significado: "El Dueño del Reino", descripcion: "El soberano absoluto. Posee el dominio de todos los reinos, visible e invisible." },
-            { nombre: "ذو الجلال والإكرام", transliteracion: "Dhul-Jalali wal-Ikram", significado: "El Señor de Majestad y Generosidad", descripcion: "El dueño de gloria y honor. A Él pertenecen toda majestad y actos de generosidad." },
-            { nombre: "المقسط", transliteracion: "Al-Muqsit", significado: "El Equitativo", descripcion: "El que juzga con equidad. Su justicia es perfecta y trata a todos con imparcialidad." },
-            { nombre: "الجامع", transliteracion: "Al-Jami'", significado: "El Reunidor", descripcion: "El que reúne a las criaturas en el Día del Juicio. Congregará a toda la creación para el ajuste de cuentas." },
-            { nombre: "الغني", transliteracion: "Al-Ghani", significado: "El Rico", descripcion: "El autosuficiente que no necesita de nadie. Su riqueza es absoluta e ilimitada." },
-            { nombre: "المغني", transliteracion: "Al-Mughni", significado: "El que Enriquece", descripcion: "El que otorga riqueza. Provee abundancia y satisfacción a Sus siervos." },
-            { nombre: "المانع", transliteracion: "Al-Mani'", significado: "El que Impide", descripcion: "El que impide el daño según su sabiduría. Protege a Sus siervos evitando que les alcance el mal." },
-            { nombre: "الضار", transliteracion: "Ad-Darr", significado: "El que Perjudica", descripcion: "El que decreta el daño con sabiduría. Puede causar afflicción como prueba o lección." },
-            { nombre: "النافع", transliteracion: "An-Nafi'", significado: "El que Beneficia", descripcion: "El que otorga beneficio y provecho. Todas las bendiciones y beneficios provienen de Él." },
-            { nombre: "النور", transliteracion: "An-Nur", significado: "La Luz", descripcion: "El que ilumina cielos y tierra. Guía a los creyentes con la luz de la fe y el conocimiento." },
-            { nombre: "الهادي", transliteracion: "Al-Hadi", significado: "El Guía", descripcion: "El que guía al camino recto. Dirige los corazones hacia la verdad y la rectitud." },
-            { nombre: "البديع", transliteracion: "Al-Badi'", significado: "El Inigualable", descripcion: "El creador sin igual. Origina la creación de manera única y perfecta." },
-            { nombre: "الباقي", transliteracion: "Al-Baqi", significado: "El Eterno", descripcion: "El que permanece sin fin. Su existencia es perpetua y no conoce fin." },
-            { nombre: "الوارث", transliteracion: "Al-Warith", significado: "El Heredero", descripcion: "El que queda después de toda la creación. Todo regresará a Él y Él permanecerá." },
-            { nombre: "الرشيد", transliteracion: "Ar-Rashid", significado: "El Recto", descripcion: "El que guía con sabiduría al camino recto. Conduce todos los asuntos hacia su final apropiado." },
-            { nombre: "الصبور", transliteracion: "As-Sabur", significado: "El Paciente", descripcion: "El que no se apresura a castigar y concede tiempo para el arrepentimiento. Su paciencia es infinita y no se agota." }
+            { nombre: "الله", transliteracion: "Allah", significado: "Dios", descripcion: "El Nombre supremo que abarca todos los atributos." },
+            { nombre: "الرحمن", transliteracion: "Ar-Rahman", significado: "El Misericordioso", descripcion: "Cuyo amor y misericordia abarcan todas las cosas." },
+            { nombre: "الرحيم", transliteracion: "Ar-Rahim", significado: "El Compasivo", descripcion: "El que concede misericordia especial a los creyentes." },
+            { nombre: "الملك", transliteracion: "Al-Malik", significado: "El Rey", descripcion: "Soberano absoluto sobre toda la creación." },
+            { nombre: "القدوس", transliteracion: "Al-Quddus", significado: "El Santísimo", descripcion: "Libre de toda imperfección y fuente de pureza." },
+            { nombre: "السلام", transliteracion: "As-Salam", significado: "La Paz", descripcion: "Fuente de paz y seguridad para sus siervos." },
+            { nombre: "المؤمن", transliteracion: "Al-Mu'min", significado: "El que da seguridad", descripcion: "Protector y dador de fe a sus siervos." },
+            { nombre: "المهيمن", transliteracion: "Al-Muhaymin", significado: "El Guardián", descripcion: "El que vela sobre Su creación." },
+            { nombre: "العزيز", transliteracion: "Al-Aziz", significado: "El Poderoso", descripcion: "El que tiene fuerza y autoridad absoluta." },
+            { nombre: "الجبار", transliteracion: "Al-Jabbar", significado: "El Dominador", descripcion: "El que endereza lo torcido y corrige con firmeza." },
+            { nombre: "المتكبر", transliteracion: "Al-Mutakabbir", significado: "El Majestuoso", descripcion: "El que es grande y está por encima de toda imperfección." },
+            { nombre: "الخالق", transliteracion: "Al-Khaliq", significado: "El Creador", descripcion: "Aquel que da origen a todo lo existente." },
+            { nombre: "البارئ", transliteracion: "Al-Bari'", significado: "El Originador", descripcion: "El que da existencia a partir de la nada." },
+            { nombre: "المصور", transliteracion: "Al-Musawwir", significado: "El Formador", descripcion: "Aquel que da forma y perfección a Su creación." },
+            { nombre: "الغفار", transliteracion: "Al-Ghaffar", significado: "El Perdonador", descripcion: "El que perdona los pecados con abundancia." },
+            { nombre: "القهار", transliteracion: "Al-Qahhar", significado: "El Dominador Supremo", descripcion: "El que somete todo bajo Su poder." },
+            { nombre: "الوهاب", transliteracion: "Al-Wahhab", significado: "El Donador", descripcion: "El que concede dones sin esperar nada a cambio." },
+            { nombre: "الرزاق", transliteracion: "Ar-Razzaq", significado: "El Sustentador", descripcion: "Quien provee el sustento a toda la creación." },
+            { nombre: "الفتاح", transliteracion: "Al-Fattah", significado: "El Que Abre", descripcion: "El que abre los caminos y las puertas de la victoria." },
+            { nombre: "العليم", transliteracion: "Al-Alim", significado: "El Omnisciente", descripcion: "El que lo sabe todo, lo oculto y lo manifiesto." },
+            { nombre: "القابض", transliteracion: "Al-Qabid", significado: "El que Retiene", descripcion: "El que restringe y retiene según Su sabiduría." },
+            { nombre: "الباسط", transliteracion: "Al-Basit", significado: "El que Expande", descripcion: "El que otorga amplitud y bendición." },
+            { nombre: "الخافض", transliteracion: "Al-Khafid", significado: "El que Abate", descripcion: "El que humilla a quien quiere." },
+            { nombre: "الرافع", transliteracion: "Ar-Rafi'", significado: "El que Eleva", descripcion: "El que exalta a quien quiere." },
+            { nombre: "المعز", transliteracion: "Al-Mu'izz", significado: "El que Honra", descripcion: "El que concede dignidad y honra." },
+            { nombre: "المذل", transliteracion: "Al-Mudhill", significado: "El que Humilla", descripcion: "El que somete y humilla a los arrogantes." },
+            { nombre: "السميع", transliteracion: "As-Sami'", significado: "El Oyente", descripcion: "El que escucha todo sin límites." },
+            { nombre: "البصير", transliteracion: "Al-Basir", significado: "El que Todo lo Ve", descripcion: "El que ve todo, lo oculto y lo visible." },
+            { nombre: "الحكم", transliteracion: "Al-Hakam", significado: "El Juez", descripcion: "El que juzga con justicia absoluta." },
+            { nombre: "العدل", transliteracion: "Al-Adl", significado: "El Justo", descripcion: "El que establece justicia perfecta." },
+            { nombre: "اللطيف", transliteracion: "Al-Latif", significado: "El Sutil", descripcion: "El que conoce los detalles más ocultos y actúa con suavidad." },
+            { nombre: "الخبير", transliteracion: "Al-Khabir", significado: "El Conocedor Íntimo", descripcion: "El que conoce lo más oculto en el corazón." },
+            { nombre: "الحليم", transliteracion: "Al-Halim", significado: "El Indulgente", descripcion: "El que no se apresura en castigar." },
+            { nombre: "العظيم", transliteracion: "Al-Azim", significado: "El Magnífico", descripcion: "El de grandeza infinita." },
+            { nombre: "الغفور", transliteracion: "Al-Ghafur", significado: "El Perdonador", descripcion: "El que perdona abundantemente." },
+            { nombre: "الشكور", transliteracion: "Ash-Shakur", significado: "El Agradecido", descripcion: "El que recompensa incluso los actos pequeños." },
+            { nombre: "العلي", transliteracion: "Al-Ali", significado: "El Altísimo", descripcion: "El más elevado en rango y esencia." },
+            { nombre: "الكبير", transliteracion: "Al-Kabir", significado: "El Grande", descripcion: "El de grandeza sin igual." },
+            { nombre: "الحفيظ", transliteracion: "Al-Hafiz", significado: "El Guardián", descripcion: "El que protege y preserva todo." },
+            { nombre: "المقيت", transliteracion: "Al-Muqit", significado: "El Sustentador", descripcion: "El que alimenta y mantiene la existencia." },
+            { nombre: "الحسيب", transliteracion: "Al-Hasib", significado: "El que Suficienta", descripcion: "El que basta para todos." },
+            { nombre: "الجليل", transliteracion: "Al-Jalil", significado: "El Majestuoso", descripcion: "El que posee majestuosidad y honor." },
+            { nombre: "الكريم", transliteracion: "Al-Karim", significado: "El Generoso", descripcion: "El que otorga sin límite." },
+            { nombre: "الرقيب", transliteracion: "Ar-Raqib", significado: "El Vigilante", descripcion: "El que observa y supervisa todo." },
+            { nombre: "المجيب", transliteracion: "Al-Mujib", significado: "El que Responde", descripcion: "El que responde a las súplicas." },
+            { nombre: "الواسع", transliteracion: "Al-Wasi'", significado: "El Inmenso", descripcion: "Aquel cuya misericordia lo abarca todo." },
+            { nombre: "الحكيم", transliteracion: "Al-Hakim", significado: "El Sabio", descripcion: "El que actúa con sabiduría perfecta." },
+            { nombre: "الودود", transliteracion: "Al-Wadud", significado: "El Amoroso", descripcion: "El que ama a Sus siervos." },
+            { nombre: "المجيد", transliteracion: "Al-Majid", significado: "El Glorioso", descripcion: "El que posee gloria y nobleza infinitas." },
+            { nombre: "الباعث", transliteracion: "Al-Ba'ith", significado: "El que Resucita", descripcion: "El que da vida después de la muerte." },
+            { nombre: "الشهيد", transliteracion: "Ash-Shahid", significado: "El Testigo", descripcion: "El que observa y da testimonio de todo." },
+            { nombre: "الحق", transliteracion: "Al-Haqq", significado: "La Verdad", descripcion: "El que es absolutamente verdadero y justo." },
+            { nombre: "الوكيل", transliteracion: "Al-Wakil", significado: "El Protector", descripcion: "El que se encarga de los asuntos de Sus siervos." },
+            { nombre: "القوي", transliteracion: "Al-Qawiyy", significado: "El Fuerte", descripcion: "El que posee fuerza ilimitada." },
+            { nombre: "المتين", transliteracion: "Al-Matin", significado: "El Firme", descripcion: "El inquebrantable y sólido." },
+            { nombre: "الولي", transliteracion: "Al-Wali", significado: "El Protector Cercano", descripcion: "El que cuida y apoya a los creyentes." },
+            { nombre: "الحميد", transliteracion: "Al-Hamid", significado: "El Digno de Alabanza", descripcion: "El que merece toda gratitud y elogio." },
+            { nombre: "المحصي", transliteracion: "Al-Muhsi", significado: "El Calculador", descripcion: "El que enumera y conoce todas las cosas." },
+            { nombre: "المبدئ", transliteracion: "Al-Mubdi'", significado: "El Originador", descripcion: "El que inicia la creación." },
+            { nombre: "المعيد", transliteracion: "Al-Mu'id", significado: "El que Repite la Creación", descripcion: "El que devuelve la vida después de la muerte." },
+            { nombre: "المحيي", transliteracion: "Al-Muhyi", significado: "El que Da Vida", descripcion: "El que otorga la vida a lo inanimado." },
+            { nombre: "المميت", transliteracion: "Al-Mumit", significado: "El que Da Muerte", descripcion: "El que causa la muerte a Sus criaturas." },
+            { nombre: "الحي", transliteracion: "Al-Hayy", significado: "El Viviente", descripcion: "El que vive eternamente sin fin." },
+            { nombre: "القيوم", transliteracion: "Al-Qayyum", significado: "El Autosuficiente", descripcion: "El que sostiene todo sin necesitar de nada." },
+            { nombre: "الواجد", transliteracion: "Al-Wajid", significado: "El que Todo lo Encuentra", descripcion: "Nada se le escapa, lo tiene todo." },
+            { nombre: "الماجد", transliteracion: "Al-Majid", significado: "El Glorioso", descripcion: "El que posee nobleza y honor." },
+            { nombre: "الواحد", transliteracion: "Al-Wahid", significado: "El Único", descripcion: "El que no tiene igual." },
+            { nombre: "الاحد", transliteracion: "Al-Ahad", significado: "El Uno", descripcion: "El absolutamente único y sin socio." },
+            { nombre: "الصمد", transliteracion: "As-Samad", significado: "El Eterno", descripcion: "El autosuficiente al que todos recurren." },
+            { nombre: "القادر", transliteracion: "Al-Qadir", significado: "El Poderoso", descripcion: "El que todo lo puede." },
+            { nombre: "المقتدر", transliteracion: "Al-Muqtadir", significado: "El Todopoderoso", descripcion: "El que domina todas las cosas." },
+            { nombre: "المقدم", transliteracion: "Al-Muqaddim", significado: "El que Adelanta", descripcion: "El que da prioridad a quien quiere." },
+            { nombre: "المؤخر", transliteracion: "Al-Mu'akhkhir", significado: "El que Retrasa", descripcion: "El que pospone lo que quiere." },
+            { nombre: "الأول", transliteracion: "Al-Awwal", significado: "El Primero", descripcion: "Aquel que no tiene principio." },
+            { nombre: "الأخر", transliteracion: "Al-Akhir", significado: "El Último", descripcion: "Aquel que no tiene fin." },
+            { nombre: "الظاهر", transliteracion: "Az-Zahir", significado: "El Manifiesto", descripcion: "El que se muestra en sus signos." },
+            { nombre: "الباطن", transliteracion: "Al-Batin", significado: "El Oculto", descripcion: "El que está oculto pero todo lo abarca." },
+            { nombre: "الوالي", transliteracion: "Al-Wali", significado: "El Gobernante", descripcion: "El que gobierna todo." },
+            { nombre: "المتعالي", transliteracion: "Al-Muta'ali", significado: "El Altísimo", descripcion: "El que está por encima de toda imperfección." },
+            { nombre: "البر", transliteracion: "Al-Barr", significado: "El Bondadoso", descripcion: "El que hace el bien a Sus siervos." },
+            { nombre: "التواب", transliteracion: "At-Tawwab", significado: "El que Acepta el Arrepentimiento", descripcion: "El que perdona a quien se vuelve a Él." },
+            { nombre: "المنتقم", transliteracion: "Al-Muntaqim", significado: "El Vengador", descripcion: "El que castiga con justicia a los opresores." },
+            { nombre: "العفو", transliteracion: "Al-'Afuww", significado: "El Indulgente", descripcion: "El que borra los pecados." },
+            { nombre: "الرؤوف", transliteracion: "Ar-Ra'uf", significado: "El Compasivo", descripcion: "El de compasión extrema." },
+            { nombre: "مالك الملك", transliteracion: "Malik-ul-Mulk", significado: "El Dueño del Reino", descripcion: "El soberano absoluto." },
+            { nombre: "ذو الجلال والإكرام", transliteracion: "Dhul-Jalali wal-Ikram", significado: "El Señor de Majestad y Generosidad", descripcion: "El dueño de gloria y honor." },
+            { nombre: "المقسط", transliteracion: "Al-Muqsi", significado: "El Equitativo", descripcion: "El que juzga con equidad." },
+            { nombre: "الجامع", transliteracion: "Al-Jami'", significado: "El Reunidor", descripcion: "El que reúne a las criaturas en el Día del Juicio." },
+            { nombre: "الغني", transliteracion: "Al-Ghani", significado: "El Rico", descripcion: "El autosuficiente que no necesita de nadie." },
+            { nombre: "المغني", transliteracion: "Al-Mughni", significado: "El que Enriquece", descripcion: "El que otorga riqueza." },
+            { nombre: "المانع", transliteracion: "Al-Mani'", significado: "El que Impide", descripcion: "El que impide el daño según su sabiduría." },
+            { nombre: "الضار", transliteracion: "Ad-Darr", significado: "El que Perjudica", descripcion: "El que decreta el daño con sabiduría." },
+            { nombre: "النافع", transliteracion: "An-Nafi'", significado: "El que Beneficia", descripcion: "El que otorga beneficio y provecho." },
+            { nombre: "النور", transliteracion: "An-Nur", significado: "La Luz", descripcion: "El que ilumina cielos y tierra." },
+            { nombre: "الهادي", transliteracion: "Al-Hadi", significado: "El Guía", descripcion: "El que guía al camino recto." },
+            { nombre: "البديع", transliteracion: "Al-Badi'", significado: "El Inigualable", descripcion: "El creador sin igual." },
+            { nombre: "الباقي", transliteracion: "Al-Baqi", significado: "El Eterno", descripcion: "El que permanece sin fin." },
+            { nombre: "الوارث", transliteracion: "Al-Warith", significado: "El Heredero", descripcion: "El que queda después de toda la creación." },
+            { nombre: "الرشيد", transliteracion: "Ar-Rashid", significado: "El Recto", descripcion: "El que guía con sabiduría al camino recto." },
+            { nombre: "الصبور", transliteracion: "As-Sabur", significado: "El Paciente", descripcion: "El que no se apresura a castigar y concede tiempo para el arrepentimiento." }
         ];
+
+        // Elementos del DOM
+        const modal = document.getElementById('nameModal');
+        const modalClose = document.getElementById('modalClose');
+        const modalArabic = document.getElementById('modalArabic');
+        const modalTransliteration = document.getElementById('modalTransliteration');
+        const modalMeaning = document.getElementById('modalMeaning');
+        const modalBody = document.getElementById('modalBody');
+
+        // Función para abrir el modal con los detalles
+        function openModal(nombreObj) {
+            modalArabic.textContent = nombreObj.nombre;
+            modalTransliteration.textContent = nombreObj.transliteracion;
+            modalMeaning.textContent = nombreObj.significado;
+            
+            // Contenido vacío para que lo rellenes después
+            modalBody.innerHTML = `
+                <div class="empty-content">
+                    <i class="fas fa-edit"></i>
+                    <h3>Contenido en Desarrollo</h3>
+                    <p>El contenido detallado para <strong>${nombreObj.transliteracion}</strong> estará disponible pronto.</p>
+                    <p>Puedes agregar información sobre el significado profundo, referencias coránicas, y reflexiones personales.</p>
+                </div>
+            `;
+            
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Función para cerrar el modal
+        function closeModal() {
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Event listeners para el modal
+        modalClose.addEventListener('click', closeModal);
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Cerrar modal con tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('show')) {
+                closeModal();
+            }
+        });
 
         // Función para mostrar los nombres
         function renderNames(names) {
@@ -484,11 +696,21 @@
                     <div class="name-details">
                         <h3 class="detail-title"><i class="fas fa-star"></i> Significado Profundo</h3>
                         <p class="description">${nombreObj.descripcion}</p>
-                        <a href="#" class="read-more">Leer más <i class="fas fa-arrow-right"></i></a>
+                        <div class="read-more" data-index="${index}">
+                            Leer más <i class="fas fa-arrow-right"></i>
+                        </div>
                     </div>
                 `;
                 
                 container.appendChild(card);
+            });
+            
+            // Añadir event listeners a los botones "Leer más"
+            document.querySelectorAll('.read-more').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = parseInt(e.currentTarget.getAttribute('data-index'));
+                    openModal(names[index]);
+                });
             });
             
             // Actualizar contador
