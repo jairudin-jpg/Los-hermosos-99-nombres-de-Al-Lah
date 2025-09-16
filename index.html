@@ -1,768 +1,158 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Los 99 Nombres de Allah</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        :root {
-            --primary: #3a9188;
-            --primary-light: #b4e0dd;
-            --primary-dark: #266a63;
-            --secondary: #f3f0e5;
-            --accent: #e9b44c;
-            --text: #2c3e50;
-            --text-light: #576574;
-            --white: #ffffff;
-            --card-bg: #ffffff;
-            --gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
-        }
-        
-        body {
-            background-color: #f8f9fa;
-            color: var(--text);
-            line-height: 1.6;
-            padding: 0;
-            background-image: 
-                radial-gradient(var(--primary-light) 1px, transparent 1px),
-                radial-gradient(var(--primary-light) 1px, transparent 1px);
-            background-size: 40px 40px;
-            background-position: 0 0, 20px 20px;
-            background-attachment: fixed;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            background: var(--gradient);
-            color: var(--white);
-            text-align: center;
-            padding: 40px 20px;
-            margin-bottom: 40px;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        header::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            transform: rotate(30deg);
-        }
-        
-        h1 {
-            font-size: 2.8rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-            position: relative;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.95;
-            max-width: 700px;
-            margin: 0 auto;
-            font-weight: 300;
-            position: relative;
-        }
-        
-        .search-container {
-            margin-bottom: 30px;
-            text-align: center;
-            position: relative;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        #search {
-            width: 100%;
-            padding: 18px 25px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            background: var(--white);
-            padding-left: 55px;
-        }
-        
-        #search:focus {
-            outline: none;
-            box-shadow: 0 5px 20px rgba(58, 145, 136, 0.25);
-        }
-        
-        .search-icon {
-            position: absolute;
-            left: 25px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary);
-            font-size: 1.2rem;
-        }
-        
-        .counter {
-            text-align: center;
-            margin: 25px 0;
-            font-size: 1.2rem;
-            color: var(--primary-dark);
-            font-weight: 500;
-            background: var(--white);
-            padding: 12px 25px;
-            border-radius: 50px;
-            display: inline-block;
-            box-shadow: var(--shadow);
-            margin-left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .names-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-            margin-bottom: 50px;
-        }
-        
-        .name-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            cursor: pointer;
-            position: relative;
-            border: 1px solid rgba(58, 145, 136, 0.1);
-        }
-        
-        .name-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-        }
-        
-        .name-header {
-            background: var(--gradient);
-            color: var(--white);
-            padding: 25px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .name-header::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: var(--accent);
-        }
-        
-        .arabic-name {
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-            font-family: 'Traditional Arabic', 'Scheherazade New', serif;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-        }
-        
-        .transliteration {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        
-        .meaning {
-            font-size: 1.1rem;
-            opacity: 0.95;
-        }
-        
-        .name-details {
-            padding: 25px;
-            background: var(--white);
-        }
-        
-        .detail-title {
-            color: var(--primary);
-            margin-bottom: 15px;
-            font-weight: 600;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-        }
-        
-        .detail-title i {
-            margin-right: 10px;
-        }
-        
-        .description {
-            line-height: 1.8;
-            color: var(--text-light);
-            margin-bottom: 20px;
-        }
-        
-        .read-more {
-            display: inline-flex;
-            align-items: center;
-            color: var(--primary);
-            font-weight: 500;
-            text-decoration: none;
-            transition: var(--transition);
-            background: var(--primary-light);
-            padding: 10px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-        }
-        
-        .read-more:hover {
-            color: var(--primary-dark);
-            background: #a3d5d1;
-            transform: translateY(-2px);
-        }
-        
-        .read-more i {
-            margin-left: 8px;
-            transition: var(--transition);
-        }
-        
-        .read-more:hover i {
-            transform: translateX(4px);
-        }
-        
-        footer {
-            text-align: center;
-            padding: 40px;
-            background: var(--gradient);
-            color: var(--white);
-            border-radius: 16px;
-            margin-top: 50px;
-            box-shadow: var(--shadow);
-        }
-        
-        .heart {
-            color: #ff6b6b;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        
-        .logo {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: var(--white);
-            opacity: 0.9;
-        }
-        
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.6);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .modal.show {
-            display: block;
-            opacity: 1;
-        }
-        
-        .modal-content {
-            background-color: var(--white);
-            margin: 5% auto;
-            padding: 0;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 700px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            position: relative;
-            animation: modalFadeIn 0.4s ease;
-            overflow: hidden;
-        }
-        
-        @keyframes modalFadeIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .modal-header {
-            background: var(--gradient);
-            color: var(--white);
-            padding: 30px;
-            text-align: center;
-            position: relative;
-        }
-        
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            font-size: 28px;
-            font-weight: bold;
-            color: var(--white);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .modal-close:hover {
-            color: var(--accent);
-            transform: rotate(90deg);
-        }
-        
-        .modal-arabic {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            font-family: 'Traditional Arabic', 'Scheherazade New', serif;
-        }
-        
-        .modal-transliteration {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        
-        .modal-meaning {
-            font-size: 1.3rem;
-            opacity: 0.95;
-        }
-        
-        .modal-body {
-            padding: 30px;
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-        
-        .modal-section {
-            margin-bottom: 25px;
-        }
-        
-        .modal-section-title {
-            color: var(--primary);
-            margin-bottom: 15px;
-            font-weight: 600;
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            border-bottom: 2px solid var(--primary-light);
-            padding-bottom: 10px;
-        }
-        
-        .modal-section-title i {
-            margin-right: 10px;
-        }
-        
-        .modal-section-content {
-            line-height: 1.8;
-            color: var(--text-light);
-        }
-        
-        .modal-section-content p {
-            margin-bottom: 15px;
-        }
-        
-        .modal-reference {
-            background-color: var(--primary-light);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            font-style: italic;
-        }
-        
-        .empty-content {
-            text-align: center;
-            padding: 30px;
-            color: var(--text-light);
-        }
-        
-        .empty-content i {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            color: var(--primary-light);
-        }
-        
-        @media (max-width: 768px) {
-            .names-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            h1 {
-                font-size: 2.2rem;
-            }
-            
-            .arabic-name {
-                font-size: 2.2rem;
-            }
-            
-            header {
-                padding: 30px 15px;
-            }
-            
-            .modal-content {
-                width: 95%;
-                margin: 10% auto;
-            }
-            
-            .modal-arabic {
-                font-size: 2.8rem;
-            }
-        }
-        
-        .featured-name {
-            border: 2px solid var(--accent);
-            transform: scale(1.02);
-        }
-        
-        .featured-name .name-header {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-        }
-        
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--gradient);
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            z-index: 900;
-            opacity: 0;
-            pointer-events: none;
-        }
-        
-        .back-to-top.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        
-        .back-to-top:hover {
-            transform: translateY(-5px);
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Los 99 Nombres de Allah</h1>
-            <p class="subtitle">"Y a Allah pertenecen los nombres más bellos, así que invócalo con ellos" (Corán 7:180)</p>
-        </header>
-        
-        <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" id="search" placeholder="Buscar nombre o significado...">
-        </div>
-        
-        <div class="counter" id="counter">Mostrando 99 nombres</div>
-        
-        <div class="names-grid" id="names-container">
-            <!-- Los nombres se insertarán aquí mediante JavaScript -->
-        </div>
-        
-        <footer>
-            <div class="logo">
-                <i class="fas fa-mosque"></i>
-            </div>
-            <p>Hecho con <span class="heart">❤</span> para los creyentes | Que la paz y las bendiciones de Allah sean con todos los profetas y mensajeros</p>
-        </footer>
-    </div>
+const nombresDeAllah = [
+    {
+        nombre: "ٱلْمَجِيد",
+        transliteracion: "Al-Maŷid",
+        significado: "El Glorioso Infinito, El Honorable y Dador de Honor, El Excelso en nobleza y generosidad",
+        descripcion: "El Nombre supremo que abarca todos los atributos.",
+        detalle: {
+            explicacion: `Significado lingüístico
 
-    <!-- Modal para detalles -->
-    <div id="nameModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-close" id="modalClose">&times;</span>
-                <div class="modal-arabic" id="modalArabic"></div>
-                <div class="modal-transliteration" id="modalTransliteration"></div>
-                <div class="modal-meaning" id="modalMeaning"></div>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- El contenido detallado se insertará aquí -->
-            </div>
-        </div>
-    </div>
+**Al-Maŷīd (ٱلْمَجِيد)** proviene de la raíz árabe **م–ج–د (m-j-d)** que significa *nobleza, gloria, elevación, excelencia, esplendor y generosidad sin límite*.
 
-    <a href="#" class="back-to-top">
-        <i class="fas fa-arrow-up"></i>
-    </a>
+**Al-Maŷīd** es **Aquel cuya grandeza no se parece a la grandeza humana**, y cuya gloria es inseparable de **Su bondad, Su paciencia, Su noble trato con la creación y Su inagotable generosidad**.
 
-    <script>
-        // Todos los nombres de Allah (sin información detallada)
-        const nombresDeAllah = [
-            { nombre: "الله", transliteracion: "Allah", significado: "Dios", descripcion: "El Nombre supremo que abarca todos los atributos." },
-            { nombre: "الرحمن", transliteracion: "Ar-Rahman", significado: "El Misericordioso", descripcion: "Cuyo amor y misericordia abarcan todas las cosas." },
-            { nombre: "الرحيم", transliteracion: "Ar-Rahim", significado: "El Compasivo", descripcion: "El que concede misericordia especial a los creyentes." },
-            { nombre: "الملك", transliteracion: "Al-Malik", significado: "El Rey", descripcion: "Soberano absoluto sobre toda la creación." },
-            { nombre: "القدوس", transliteracion: "Al-Quddus", significado: "El Santísimo", descripcion: "Libre de toda imperfección y fuente de pureza." },
-            { nombre: "السلام", transliteracion: "As-Salam", significado: "La Paz", descripcion: "Fuente de paz y seguridad para sus siervos." },
-            { nombre: "المؤمن", transliteracion: "Al-Mu'min", significado: "El que da seguridad", descripcion: "Protector y dador de fe a sus siervos." },
-            { nombre: "المهيمن", transliteracion: "Al-Muhaymin", significado: "El Guardián", descripcion: "El que vela sobre Su creación." },
-            { nombre: "العزيز", transliteracion: "Al-Aziz", significado: "El Poderoso", descripcion: "El que tiene fuerza y autoridad absoluta." },
-            { nombre: "الجبار", transliteracion: "Al-Jabbar", significado: "El Dominador", descripcion: "El que endereza lo torcido y corrige con firmeza." },
-            { nombre: "المتكبر", transliteracion: "Al-Mutakabbir", significado: "El Majestuoso", descripcion: "El que es grande y está por encima de toda imperfección." },
-            { nombre: "الخالق", transliteracion: "Al-Khaliq", significado: "El Creador", descripcion: "Aquel que da origen a todo lo existente." },
-            { nombre: "البارئ", transliteracion: "Al-Bari'", significado: "El Originador", descripcion: "El que da existencia a partir de la nada." },
-            { nombre: "المصور", transliteracion: "Al-Musawwir", significado: "El Formador", descripcion: "Aquel que da forma y perfección a Su creación." },
-            { nombre: "الغفار", transliteracion: "Al-Ghaffar", significado: "El Perdonador", descripcion: "El que perdona los pecados con abundancia." },
-            { nombre: "القهار", transliteracion: "Al-Qahhar", significado: "El Dominador Supremo", descripcion: "El que somete todo bajo Su poder." },
-            { nombre: "الوهاب", transliteracion: "Al-Wahhab", significado: "El Donador", descripcion: "El que concede dones sin esperar nada a cambio." },
-            { nombre: "الرزاق", transliteracion: "Ar-Razzaq", significado: "El Sustentador", descripcion: "Quien provee el sustento a toda la creación." },
-            { nombre: "الفتاح", transliteracion: "Al-Fattah", significado: "El Que Abre", descripcion: "El que abre los caminos y las puertas de la victoria." },
-            { nombre: "العليم", transliteracion: "Al-Alim", significado: "El Omnisciente", descripcion: "El que lo sabe todo, lo oculto y lo manifiesto." },
-            { nombre: "القابض", transliteracion: "Al-Qabid", significado: "El que Retiene", descripcion: "El que restringe y retiene según Su sabiduría." },
-            { nombre: "الباسط", transliteracion: "Al-Basit", significado: "El que Expande", descripcion: "El que otorga amplitud y bendición." },
-            { nombre: "الخافض", transliteracion: "Al-Khafid", significado: "El que Abate", descripcion: "El que humilla a quien quiere." },
-            { nombre: "الرافع", transliteracion: "Ar-Rafi'", significado: "El que Eleva", descripcion: "El que exalta a quien quiere." },
-            { nombre: "المعز", transliteracion: "Al-Mu'izz", significado: "El que Honra", descripcion: "El que concede dignidad y honra." },
-            { nombre: "المذل", transliteracion: "Al-Mudhill", significado: "El que Humilla", descripcion: "El que somete y humilla a los arrogantes." },
-            { nombre: "السميع", transliteracion: "As-Sami'", significado: "El Oyente", descripcion: "El que escucha todo sin límites." },
-            { nombre: "البصير", transliteracion: "Al-Basir", significado: "El que Todo lo Ve", descripcion: "El que ve todo, lo oculto y lo visible." },
-            { nombre: "الحكم", transliteracion: "Al-Hakam", significado: "El Juez", descripcion: "El que juzga con justicia absoluta." },
-            { nombre: "العدل", transliteracion: "Al-Adl", significado: "El Justo", descripcion: "El que establece justicia perfecta." },
-            { nombre: "اللطيف", transliteracion: "Al-Latif", significado: "El Sutil", descripcion: "El que conoce los detalles más ocultos y actúa con suavidad." },
-            { nombre: "الخبير", transliteracion: "Al-Khabir", significado: "El Conocedor Íntimo", descripcion: "El que conoce lo más oculto en el corazón." },
-            { nombre: "الحليم", transliteracion: "Al-Halim", significado: "El Indulgente", descripcion: "El que no se apresura en castigar." },
-            { nombre: "العظيم", transliteracion: "Al-Azim", significado: "El Magnífico", descripcion: "El de grandeza infinita." },
-            { nombre: "الغفور", transliteracion: "Al-Ghafur", significado: "El Perdonador", descripcion: "El que perdona abundantemente." },
-            { nombre: "الشكور", transliteracion: "Ash-Shakur", significado: "El Agradecido", descripcion: "El que recompensa incluso los actos pequeños." },
-            { nombre: "العلي", transliteracion: "Al-Ali", significado: "El Altísimo", descripcion: "El más elevado en rango y esencia." },
-            { nombre: "الكبير", transliteracion: "Al-Kabir", significado: "El Grande", descripcion: "El de grandeza sin igual." },
-            { nombre: "الحفيظ", transliteracion: "Al-Hafiz", significado: "El Guardián", descripcion: "El que protege y preserva todo." },
-            { nombre: "المقيت", transliteracion: "Al-Muqit", significado: "El Sustentador", descripcion: "El que alimenta y mantiene la existencia." },
-            { nombre: "الحسيب", transliteracion: "Al-Hasib", significado: "El que Suficienta", descripcion: "El que basta para todos." },
-            { nombre: "الجليل", transliteracion: "Al-Jalil", significado: "El Majestuoso", descripcion: "El que posee majestuosidad y honor." },
-            { nombre: "الكريم", transliteracion: "Al-Karim", significado: "El Generoso", descripcion: "El que otorga sin límite." },
-            { nombre: "الرقيب", transliteracion: "Ar-Raqib", significado: "El Vigilante", descripcion: "El que observa y supervisa todo." },
-            { nombre: "المجيب", transliteracion: "Al-Mujib", significado: "El que Responde", descripcion: "El que responde a las súplicas." },
-            { nombre: "الواسع", transliteracion: "Al-Wasi'", significado: "El Inmenso", descripcion: "Aquel cuya misericordia lo abarca todo." },
-            { nombre: "الحكيم", transliteracion: "Al-Hakim", significado: "El Sabio", descripcion: "El que actúa con sabiduría perfecta." },
-            { nombre: "الودود", transliteracion: "Al-Wadud", significado: "El Amoroso", descripcion: "El que ama a Sus siervos." },
-            { nombre: "المجيد", transliteracion: "Al-Majid", significado: "El Glorioso", descripcion: "El que posee gloria y nobleza infinitas." },
-            { nombre: "الباعث", transliteracion: "Al-Ba'ith", significado: "El que Resucita", descripcion: "El que da vida después de la muerte." },
-            { nombre: "الشهيد", transliteracion: "Ash-Shahid", significado: "El Testigo", descripcion: "El que observa y da testimonio de todo." },
-            { nombre: "الحق", transliteracion: "Al-Haqq", significado: "La Verdad", descripcion: "El que es absolutamente verdadero y justo." },
-            { nombre: "الوكيل", transliteracion: "Al-Wakil", significado: "El Protector", descripcion: "El que se encarga de los asuntos de Sus siervos." },
-            { nombre: "القوي", transliteracion: "Al-Qawiyy", significado: "El Fuerte", descripcion: "El que posee fuerza ilimitada." },
-            { nombre: "المتين", transliteracion: "Al-Matin", significado: "El Firme", descripcion: "El inquebrantable y sólido." },
-            { nombre: "الولي", transliteracion: "Al-Wali", significado: "El Protector Cercano", descripcion: "El que cuida y apoya a los creyentes." },
-            { nombre: "الحميد", transliteracion: "Al-Hamid", significado: "El Digno de Alabanza", descripcion: "El que merece toda gratitud y elogio." },
-            { nombre: "المحصي", transliteracion: "Al-Muhsi", significado: "El Calculador", descripcion: "El que enumera y conoce todas las cosas." },
-            { nombre: "المبدئ", transliteracion: "Al-Mubdi'", significado: "El Originador", descripcion: "El que inicia la creación." },
-            { nombre: "المعيد", transliteracion: "Al-Mu'id", significado: "El que Repite la Creación", descripcion: "El que devuelve la vida después de la muerte." },
-            { nombre: "المحيي", transliteracion: "Al-Muhyi", significado: "El que Da Vida", descripcion: "El que otorga la vida a lo inanimado." },
-            { nombre: "المميت", transliteracion: "Al-Mumit", significado: "El que Da Muerte", descripcion: "El que causa la muerte a Sus criaturas." },
-            { nombre: "الحي", transliteracion: "Al-Hayy", significado: "El Viviente", descripcion: "El que vive eternamente sin fin." },
-            { nombre: "القيوم", transliteracion: "Al-Qayyum", significado: "El Autosuficiente", descripcion: "El que sostiene todo sin necesitar de nada." },
-            { nombre: "الواجد", transliteracion: "Al-Wajid", significado: "El que Todo lo Encuentra", descripcion: "Nada se le escapa, lo tiene todo." },
-            { nombre: "الماجد", transliteracion: "Al-Majid", significado: "El Glorioso", descripcion: "El que posee nobleza y honor." },
-            { nombre: "الواحد", transliteracion: "Al-Wahid", significado: "El Único", descripcion: "El que no tiene igual." },
-            { nombre: "الاحد", transliteracion: "Al-Ahad", significado: "El Uno", descripcion: "El absolutamente único y sin socio." },
-            { nombre: "الصمد", transliteracion: "As-Samad", significado: "El Eterno", descripcion: "El autosuficiente al que todos recurren." },
-            { nombre: "القادر", transliteracion: "Al-Qadir", significado: "El Poderoso", descripcion: "El que todo lo puede." },
-            { nombre: "المقتدر", transliteracion: "Al-Muqtadir", significado: "El Todopoderoso", descripcion: "El que domina todas las cosas." },
-            { nombre: "المقدم", transliteracion: "Al-Muqaddim", significado: "El que Adelanta", descripcion: "El que da prioridad a quien quiere." },
-            { nombre: "المؤخر", transliteracion: "Al-Mu'akhkhir", significado: "El que Retrasa", descripcion: "El que pospone lo que quiere." },
-            { nombre: "الأول", transliteracion: "Al-Awwal", significado: "El Primero", descripcion: "Aquel que no tiene principio." },
-            { nombre: "الأخر", transliteracion: "Al-Akhir", significado: "El Último", descripcion: "Aquel que no tiene fin." },
-            { nombre: "الظاهر", transliteracion: "Az-Zahir", significado: "El Manifiesto", descripcion: "El que se muestra en sus signos." },
-            { nombre: "الباطن", transliteracion: "Al-Batin", significado: "El Oculto", descripcion: "El que está oculto pero todo lo abarca." },
-            { nombre: "الوالي", transliteracion: "Al-Wali", significado: "El Gobernante", descripcion: "El que gobierna todo." },
-            { nombre: "المتعالي", transliteracion: "Al-Muta'ali", significado: "El Altísimo", descripcion: "El que está por encima de toda imperfección." },
-            { nombre: "البر", transliteracion: "Al-Barr", significado: "El Bondadoso", descripcion: "El que hace el bien a Sus siervos." },
-            { nombre: "التواب", transliteracion: "At-Tawwab", significado: "El que Acepta el Arrepentimiento", descripcion: "El que perdona a quien se vuelve a Él." },
-            { nombre: "المنتقم", transliteracion: "Al-Muntaqim", significado: "El Vengador", descripcion: "El que castiga con justicia a los opresores." },
-            { nombre: "العفو", transliteracion: "Al-'Afuww", significado: "El Indulgente", descripcion: "El que borra los pecados." },
-            { nombre: "الرؤوف", transliteracion: "Ar-Ra'uf", significado: "El Compasivo", descripcion: "El de compasión extrema." },
-            { nombre: "مالك الملك", transliteracion: "Malik-ul-Mulk", significado: "El Dueño del Reino", descripcion: "El soberano absoluto." },
-            { nombre: "ذو الجلال والإكرام", transliteracion: "Dhul-Jalali wal-Ikram", significado: "El Señor de Majestad y Generosidad", descripcion: "El dueño de gloria y honor." },
-            { nombre: "المقسط", transliteracion: "Al-Muqsi", significado: "El Equitativo", descripcion: "El que juzga con equidad." },
-            { nombre: "الجامع", transliteracion: "Al-Jami'", significado: "El Reunidor", descripcion: "El que reúne a las criaturas en el Día del Juicio." },
-            { nombre: "الغني", transliteracion: "Al-Ghani", significado: "El Rico", descripcion: "El autosuficiente que no necesita de nadie." },
-            { nombre: "المغني", transliteracion: "Al-Mughni", significado: "El que Enriquece", descripcion: "El que otorga riqueza." },
-            { nombre: "المانع", transliteracion: "Al-Mani'", significado: "El que Impide", descripcion: "El que impide el daño según su sabiduría." },
-            { nombre: "الضار", transliteracion: "Ad-Darr", significado: "El que Perjudica", descripcion: "El que decreta el daño con sabiduría." },
-            { nombre: "النافع", transliteracion: "An-Nafi'", significado: "El que Beneficia", descripcion: "El que otorga beneficio y provecho." },
-            { nombre: "النور", transliteracion: "An-Nur", significado: "La Luz", descripcion: "El que ilumina cielos y tierra." },
-            { nombre: "الهادي", transliteracion: "Al-Hadi", significado: "El Guía", descripcion: "El que guía al camino recto." },
-            { nombre: "البديع", transliteracion: "Al-Badi'", significado: "El Inigualable", descripcion: "El creador sin igual." },
-            { nombre: "الباقي", transliteracion: "Al-Baqi", significado: "El Eterno", descripcion: "El que permanece sin fin." },
-            { nombre: "الوارث", transliteracion: "Al-Warith", significado: "El Heredero", descripcion: "El que queda después de toda la creación." },
-            { nombre: "الرشيد", transliteracion: "Ar-Rashid", significado: "El Recto", descripcion: "El que guía con sabiduría al camino recto." },
-            { nombre: "الصبور", transliteracion: "As-Sabur", significado: "El Paciente", descripcion: "El que no se apresura a castigar y concede tiempo para el arrepentimiento." }
-        ];
+> “Él es Digno de alabanza, Glorioso (Maŷīd).”  
+> (Corán, 11:73)
 
-        // Elementos del DOM
-        const modal = document.getElementById('nameModal');
-        const modalClose = document.getElementById('modalClose');
-        const modalArabic = document.getElementById('modalArabic');
-        const modalTransliteration = document.getElementById('modalTransliteration');
-        const modalMeaning = document.getElementById('modalMeaning');
-        const modalBody = document.getElementById('modalBody');
+> “Dueño del Trono, Glorioso (Maŷīd), el que todo lo hace como quiere.”  
+> (Corán, 85:15)
 
-        // Función para abrir el modal con los detalles
-        function openModal(nombreObj) {
-            modalArabic.textContent = nombreObj.nombre;
-            modalTransliteration.textContent = nombreObj.transliteracion;
-            modalMeaning.textContent = nombreObj.significado;
-            
-            // Contenido vacío para que lo rellenes después
-            modalBody.innerHTML = `
-                <div class="empty-content">
-                    <i class="fas fa-edit"></i>
-                    <h3>Contenido en Desarrollo</h3>
-                    <p>El contenido detallado para <strong>${nombreObj.transliteracion}</strong> estará disponible pronto.</p>
-                    <p>Puedes agregar información sobre el significado profundo, referencias coránicas, y reflexiones personales.</p>
-                </div>
-            `;
-            
-            modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
+---
+
+## 📚 Opiniones de los sabios clásicos
+
+### ◽ Al-Ghazālī (رحمه الله) – “El que posee la grandeza más bella”
+En *Al-Maqṣad al-Asnā*, Al-Ghazālī explica que **Al-Maŷīd** combina dos cualidades supremas:
+
+* Grandeza majestuosa que infunde reverencia.
+* Generosidad sublime que infunde amor.
+
+> “Es el Noble cuya generosidad no se interrumpe,  
+> y el Glorioso cuya majestad no disminuye.”
+
+Y concluye:
+
+> “Su gloria no es la de los reyes humanos,  
+> basada en ejércitos y poder…  
+> sino en la perfección interior, en el honor absoluto,  
+> y en el amor constante hacia Sus siervos.”
+
+---
+
+### ◽ Ibn Qayyim al-Jawziyyah (رحمه الله) – “La gloria que embellece al alma”
+Ibn Qayyim enseña que **Al-Maŷīd** es aquel que da honor incluso a los indignos, y que engrandece a quien se vuelve a Él con humildad.
+
+> “Cuando Allah quiere embellecer a un siervo,  
+> le da parte de Su gloria:  
+> humildad profunda, verdad firme, y corazón amplio.”
+
+Y dice que este nombre inspira a los siervos a buscar nobleza espiritual, no mundanal:
+
+> “La gloria verdadera no está en el estatus externo,  
+> sino en la cercanía a Al-Maŷīd.”
+
+---
+
+### ◽ Fakhr ad-Dīn Ar-Rāzī (رحمه الله) – “El esplendor sin límites”
+Ar-Rāzī define **al-majd** como *kamāl fī kamāl* — “perfección sobre perfección”.
+
+Dice:
+
+> “Al-Maŷīd es Aquel cuya gloria es intrínseca, no adquirida,  
+> y cuya nobleza se expresa en Su perdón a quien lo ha desobedecido,  
+> y en Su bondad con quien no Le reconoce.”
+
+---
+
+### ◽ Al-Bayhaqī (رحمه الله) – “El Dador de honor sin medida”
+En *Al-Asmāʾ wa aṣ-Ṣifāt*, Al-Bayhaqī señala que **Al-Maŷīd** es también Aquel que honra a quien Le busca.  
+Y que uno de los frutos de invocar este nombre es que Allah eleva el corazón del creyente por encima de la mezquindad.
+
+> “Quien se refugia en Su gloria,  
+> obtiene un corazón que no se arrastra detrás de las pasiones,  
+> y una lengua que no se envilece con la mentira.”
+
+---
+
+### ◽ Sayyid Qutb (رحمه الله) – “Gloria luminosa y viva”
+En *Fi Dhilāl al-Qurʾān*, Sayyid Qutb insiste en que la gloria de Allah es viva y actuante.
+
+> “No es un atributo decorativo,  
+> sino una fuerza real que sustenta el universo,  
+> y que se manifiesta en cada acto de misericordia, cada milagro silencioso,  
+> cada alma restaurada por el perdón.”
+
+Él llama a ver la gloria de Allah no como intimidación, sino como una fuente de esperanza y belleza.
+
+---
+
+### ◽ Shah Waliullah al-Dihlawī (رحمه الله) – “Al-Maŷīd como meta del alma elevada”
+En su obra *Hujjat Allah al-Bāligha*, Waliullah afirma que el alma que aspira a la nobleza encuentra en Al-Maŷīd su espejo y su modelo.
+
+> “Quien vive recordando la gloria de Allah,  
+> se aleja del egoísmo, de la mezquindad, de la vulgaridad…  
+> y busca una vida bella, limpia, y luminosa.”
+
+---
+
+## 🌿 Beneficios espirituales, emocionales y sociales
+
+### 🕊️ Espirituales:
+* Inspira humildad y elevación interior.
+* Aleja de la vanidad y la búsqueda de falsa grandeza.
+* Conduce a la gratitud profunda.
+
+### 💞 Emocionales:
+* Eleva la autoestima espiritual.
+* Enseña que el honor verdadero no viene de la opinión de los hombres,  
+  sino de la cercanía con el Glorioso.
+
+### 🧭 Sociales:
+* Inspira a tratar con nobleza a los demás.
+* Forma siervos con dignidad, sin arrogancia, y con pureza de intención.
+
+---
+
+## 🌺 Visión sufí del nombre Al-Maŷīd
+
+Para los sufíes, Al-Maŷīd es el Nombre que refleja el esplendor divino que embellece el alma.
+
+Dijo Imām al-Qushayrī:
+
+> “El murīd (aspirante) que se conecta con Al-Maŷīd,  
+> deja la bajeza de lo inmediato,  
+> y empieza a desear lo eterno,  
+> lo bello,  
+> lo noble.”
+
+Ellos ven Su gloria en cada latido que contiene sentido,  
+en cada silencio que guarda sabiduría,  
+en cada lágrima que es recogida por Su honor.
+
+> “Oh Allah,  
+> haznos de los que no buscan ser grandes para el mundo,  
+> sino gloriosos para Ti.”
+
+---
+
+## 💫 Conclusión espiritual
+
+Al-Maŷīd no es solo el Glorioso Inaccesible.  
+Es también el Glorioso que te honra cuando nadie cree en ti.  
+El que te da dignidad cuando tú mismo la perdiste.  
+El que te embellece cuando tu alma estaba rota.
+
+No necesitas fama ni aplausos.  
+Solo Su mirada.
+
+Y si Él, el Maŷīd, te da valor…  
+¿quién puede quitarte la nobleza que Él puso en tu corazón?
+
+> “Oh Glorioso,  
+> haz que mi vida sea un reflejo de Tu nobleza.  
+> Hazme digno… no ante la gente,  
+> sino ante Ti.”
+`            
         }
-
-        // Función para cerrar el modal
-        function closeModal() {
-            modal.classList.remove('show');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Event listeners para el modal
-        modalClose.addEventListener('click', closeModal);
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
-        // Cerrar modal con tecla Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('show')) {
-                closeModal();
-            }
-        });
-
-        // Función para mostrar los nombres
-        function renderNames(names) {
-            const container = document.getElementById('names-container');
-            container.innerHTML = '';
-            
-            names.forEach((nombreObj, index) => {
-                const card = document.createElement('div');
-                card.className = 'name-card';
-                if (index === 0) {
-                    card.classList.add('featured-name');
-                }
-                
-                card.innerHTML = `
-                    <div class="name-header">
-                        <div class="arabic-name">${nombreObj.nombre}</div>
-                        <div class="transliteration">${nombreObj.transliteracion}</div>
-                        <div class="meaning">${nombreObj.significado}</div>
-                    </div>
-                    <div class="name-details">
-                        <h3 class="detail-title"><i class="fas fa-star"></i> Significado Profundo</h3>
-                        <p class="description">${nombreObj.descripcion}</p>
-                        <div class="read-more" data-index="${index}">
-                            Leer más <i class="fas fa-arrow-right"></i>
-                        </div>
-                    </div>
-                `;
-                
-                container.appendChild(card);
-            });
-            
-            // Añadir event listeners a los botones "Leer más"
-            document.querySelectorAll('.read-more').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const index = parseInt(e.currentTarget.getAttribute('data-index'));
-                    openModal(names[index]);
-                });
-            });
-            
-            // Actualizar contador
-            document.getElementById('counter').textContent = `Mostrando ${names.length} nombres`;
-        }
-        
-        // Función de búsqueda
-        function setupSearch() {
-            const searchInput = document.getElementById('search');
-            
-            searchInput.addEventListener('input', () => {
-                const searchTerm = searchInput.value.toLowerCase();
-                
-                if (searchTerm === '') {
-                    renderNames(nombresDeAllah);
-                    return;
-                }
-                
-                const filteredNames = nombresDeAllah.filter(nombreObj => 
-                    nombreObj.transliteracion.toLowerCase().includes(searchTerm) ||
-                    nombreObj.significado.toLowerCase().includes(searchTerm) ||
-                    nombreObj.descripcion.toLowerCase().includes(searchTerm)
-                );
-                
-                renderNames(filteredNames);
-            });
-        }
-        
-        // Botón volver arriba
-        function setupBackToTop() {
-            const backToTopBtn = document.querySelector('.back-to-top');
-            
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 300) {
-                    backToTopBtn.classList.add('visible');
-                } else {
-                    backToTopBtn.classList.remove('visible');
-                }
-            });
-            
-            backToTopBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        }
-        
-        // Inicializar la página
-        document.addEventListener('DOMContentLoaded', () => {
-            renderNames(nombresDeAllah);
-            setupSearch();
-            setupBackToTop();
-        });
-    </script>
-</body>
-</html>
+    }
+];
