@@ -1,39 +1,431 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Los hermosos 99 nombres de Al-Lah</title>
-    <title>Los 99 Nombres de Allah</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        :root {
-            --primary: #3a9188;
-            --primary-light: #b4e0dd;
-            --primary-dark: #266a63;
-            --secondary: #f3f0e5;
-            --accent: #e9b44c;
-            --text: #2c3e50;
-            --text-light: #576574;
-            --white: #ffffff;
-            --card-bg: #ffffff;
-            --gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
-        }
-        
-        body {
-            background-color: #f8f9fa;
-            color: var(--text);
-            line-height: 1.6;
-            padding: 0;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Los 99 Nombres de Allah</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #3a9188;
+            --primary-light: #b4e0dd;
+            --primary-dark: #266a63;
+            --secondary: #f3f0e5;
+            --accent: #e9b44c;
+            --text: #2c3e50;
+            --text-light: #576574;
+            --white: #ffffff;
+            --card-bg: #ffffff;
+            --gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: var(--text);
+            line-height: 1.6;
+            padding: 0;
+            background-image: 
+                radial-gradient(var(--primary-light) 1px, transparent 1px),
+                radial-gradient(var(--primary-light) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            background-attachment: fixed;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: var(--gradient);
+            color: var(--white);
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: rotate(30deg);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 300;
+            position: relative;
+        }
+        
+        .search-container {
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        #search {
+            width: 100%;
+            padding: 18px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            background: var(--white);
+            padding-left: 55px;
+        }
+        
+        #search:focus {
+            outline: none;
+            box-shadow: 0 5px 20px rgba(58, 145, 136, 0.25);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .counter {
+            text-align: center;
+            margin: 25px 0;
+            font-size: 1.2rem;
+            color: var(--primary-dark);
+            font-weight: 500;
+            background: var(--white);
+            padding: 12px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            box-shadow: var(--shadow);
+            margin-left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .names-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+        
+        .name-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            border: 1px solid rgba(58, 145, 136, 0.1);
+        }
+        
+        .name-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .name-header {
+            background: var(--gradient);
+            color: var(--white);
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .name-header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--accent);
+        }
+        
+        .arabic-name {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            font-family: 'Traditional Arabic', 'Scheherazade New', serif;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .transliteration {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .meaning {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+        
+        .name-details {
+            padding: 25px;
+            background: var(--white);
+        }
+        
+        .detail-title {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .detail-title i {
+            margin-right: 10px;
+        }
+        
+        .description {
+            line-height: 1.8;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary);
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+            background: var(--primary-light);
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+        
+        .read-more:hover {
+            color: var(--primary-dark);
+            background: #a3d5d1;
+            transform: translateY(-2px);
+        }
+        
+        .read-more i {
+            margin-left: 8px;
+            transition: var(--transition);
+        }
+        
+        .read-more:hover i {
+            transform: translateX(4px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px;
+            background: var(--gradient);
+            color: var(--white);
+            border-radius: 16px;
+            margin-top: 50px;
+            box-shadow: var(--shadow);
+        }
+        
+        .heart {
+            color: #ff6b6b;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--white);
+            opacity: 0.9;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            display: block;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: modalFadeIn 0.4s ease;
+            overflow: hidden;
+        }
+        
+        @keyframes modalFadeIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            background: var(--gradient);
+            color: var(--white);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .modal-close:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+        }
+        
+        .modal-arabic {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            font-family: 'Traditional Arabic', 'Scheherazade New', serif;
+        }
+        
+        .modal-transliteration {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .modal-meaning {
+            font-size: 1.3rem;
+            opacity: 0.95;
+        }
+        
+        .modal-body {
+            padding: 30px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .modal-section {
+            margin-bottom: 25px;
+        }
+        
+        .modal-section-title {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 10px;
+        }
+        
+        .modal-section-title i {
+            margin-right: 10px;
+        }
+        
+        .modal-section-content {
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+        
+        .modal-section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .modal-reference {
+            background-color: var(--primary-light);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-style: italic;
+        }
+        
+        .empty-content {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-light);
+        }
+        
+        .empty-content i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary-light);
+        }
+        
+        .guide {
+            background-color: #f9f9f9;
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .guide-title {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        @media (
+
             background-image: 
                 radial-gradient(var(--primary-light) 1px, transparent 1px),
                 radial-gradient(var(--primary-light) 1px, transparent 1px);
